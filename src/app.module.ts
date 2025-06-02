@@ -7,12 +7,13 @@ import { NotificationsController } from './notifications/notifications.controlle
 import { NotificationsService } from './notifications/notifications.service';
 import { ConfigModule } from '@nestjs/config';
 import { StudentModule } from './student/student.module';
+import { ManagerModule } from './manager/manager.module';
 
 @Module({
   imports: [FirebaseModule,  
     ConfigModule.forRoot({
       isGlobal: true,
-    }), StudentModule,],
+    }), StudentModule, ManagerModule,],
   controllers: [AppController, NotificationsController],
   providers: [AppService, FirebaseService, NotificationsService],
 })

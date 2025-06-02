@@ -39,9 +39,10 @@ async notifyOrderStatus(
     throw new Error(`No deviceTokens found for student ID ${studentID}`);
   }
 
-  const tokens = Array.isArray(studentData.deviceTokens)
-    ? studentData.deviceTokens
-    : [studentData.deviceTokens];
+  // const tokens = Array.isArray(studentData.deviceTokens)
+  //   ? studentData.deviceTokens
+  //   : [studentData.deviceTokens];
+  const tokens = [studentData.deviceToken];
 
   if (tokens.length === 0) {
     throw new Error(`Device token list is empty for student ID ${studentID}`);

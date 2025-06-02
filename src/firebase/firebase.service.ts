@@ -47,20 +47,37 @@ export class FirebaseService {
   }
 
   // New one Save devide Token
-   async saveDeviceToken(registrationId: string, token: string): Promise<void> {
-  const snapshot = await this.firestore
-    .collection('students')
-    .where('registrationId', '==', registrationId)
-    .get();
+//    async saveDeviceToken(registrationId: string, token: string): Promise<void> {
+//   const snapshot = await this.firestore
+//     .collection('students')
+//     .where('registrationId', '==', registrationId)
+//     .get();
 
-  if (snapshot.empty) {
-    throw new Error('Student not found');
+//   if (snapshot.empty) {
+//     throw new Error('Student not found');
+//   }
+
+//   const studentRef = snapshot.docs[0].id.ref;
+
+//   await studentRef.update({
+//     deviceTokens: admin.firestore.FieldValue.arrayUnion(token)
+//   });
+// }
+async saveDeviceToken(
+  collection: 'students' | 'laundry_manager', 
+  docId: string, 
+  token: string
+): Promise<void> {
+  const docRef = this.firestore.collection(collection).doc(docId);
+  const docSnap = await docRef.get();
+
+  if (!docSnap.exists) {
+    throw new Error(`${collection.slice(0, -1)} not found`); // 'student' or 'manager'
   }
 
-  const studentRef = snapshot.docs[0].ref;
-
-  await studentRef.update({
-    deviceTokens: admin.firestore.FieldValue.arrayUnion(token)
+  await docRef.update({
+    // deviceTokens: admin.firestore.FieldValue.arrayUnion(token),
+     deviceToken: token
   });
 }
 
