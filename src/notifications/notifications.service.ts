@@ -8,7 +8,9 @@ export class NotificationsService {
   async notifyOrderCreated(studentToken: string, orderId: string) {
     const title = 'Order Created';
     const body = `Your laundry order #${orderId} has been created.`;
-    return this.firebaseService.sendNotification(studentToken, title, body);
+    // return this.firebaseService.sendNotification(studentToken, title, body);
+      const messageId = await this.firebaseService.sendNotification(studentToken, title, body);
+  return { success: true, messageId, message: 'Notification sent successfully.' };
   }
 }
 

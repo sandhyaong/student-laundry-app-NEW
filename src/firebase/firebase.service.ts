@@ -1,30 +1,4 @@
-// import { Injectable } from '@nestjs/common';
-// import { ConfigService } from '@nestjs/config';
-// import * as admin from 'firebase-admin';
-// import * as path from 'path';
-// @Injectable()
-// export class FirebaseService {
-//   constructor(private configService: ConfigService) {
-//     const serviceAccount = require(path.join(__dirname, './firebase-config.json'));
-//     if (!admin.apps.length) {
-//       admin.initializeApp({
-//         credential: admin.credential.cert(serviceAccount),
-//       });
-//     }
-//   }
 
-//   async sendNotification(token: string, title: string, body: string) {
-//     const message = {
-//       token,
-//       notification: {
-//         title,
-//         body,
-//       },
-//     };
-//     return admin.messaging().send(message);
-//   }
-// }
-// Newwww
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as admin from 'firebase-admin';
@@ -33,6 +7,7 @@ import * as path from 'path';
 
 @Injectable()
 export class FirebaseService {
+    private firestore: admin.firestore.Firestore;
   constructor(private configService: ConfigService) {
     const configPath = this.configService.get<string>('FIREBASE_CONFIG_PATH');
 
@@ -49,6 +24,7 @@ export class FirebaseService {
         credential: admin.credential.cert(serviceAccount),
       });
     }
+       this.firestore = admin.firestore();
   }
 
   async sendNotification(token: string, title: string, body: string) {
@@ -69,4 +45,22 @@ export class FirebaseService {
       throw error;
     }
   }
+  // New one
+   async saveDeviceToken(registrationId: string, token: string): Promise<void> {
+  const snapshot = await this.firestore
+    .collection('students')
+    .where('registrationId', '==', registrationId)
+    .get();
+
+  if (snapshot.empty) {
+    throw new Error('Student not found');
+  }
+
+  const studentRef = snapshot.docs[0].ref;
+
+  await studentRef.update({
+    deviceTokens: admin.firestore.FieldValue.arrayUnion(token)
+  });
+}
+
 }
