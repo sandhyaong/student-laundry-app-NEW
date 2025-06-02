@@ -45,7 +45,8 @@ export class FirebaseService {
       throw error;
     }
   }
-  // New one
+
+  // New one Save devide Token
    async saveDeviceToken(registrationId: string, token: string): Promise<void> {
   const snapshot = await this.firestore
     .collection('students')
@@ -62,5 +63,6 @@ export class FirebaseService {
     deviceTokens: admin.firestore.FieldValue.arrayUnion(token)
   });
 }
+
 
 }
